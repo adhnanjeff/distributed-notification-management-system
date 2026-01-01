@@ -1,0 +1,89 @@
+<div class="dashboard-container">
+  <div class="header">
+    <h1>Notification System Dashboard</h1>
+    <button (click)="refresh()" class="refresh-btn"><i class="icon-refresh"></i> Refresh</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="!loading && !error" class="dashboard-content">
+    <!-- Summary Cards -->
+    <div class="summary-cards" *ngIf="summary">
+      <div class="card">
+        <h3>Total Notifications</h3>
+        <div class="metric">{{ summary.total }}</div>
+      </div>
+      <div class="card">
+        <h3>Sent</h3>
+        <div class="metric success">{{ summary.sent }}</div>
+      </div>
+      <div class="card">
+        <h3>Failed</h3>
+        <div class="metric error">{{ summary.failed }}</div>
+      </div>
+      <div class="card">
+        <h3>Pending</h3>
+        <div class="metric warning">{{ summary.pending }}</div>
+      </div>
+      <div class="card">
+        <h3>Avg Processing Time</h3>
+        <div class="metric">{{ summary.averageProcessingTimeMs | number:'1.0-0' }}ms</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-section">
+      <div class="chart-container">
+        <h3>Status Distribution</h3>
+        <canvas id="statusChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>Channel Analytics</h3>
+        <canvas id="channelChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Recent Notifications -->
+    <div class="recent-section">
+      <h3>Recent Notifications</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Channel</th>
+              <th>Status</th>
+              <th>Created At</th>
+              <th>Processed At</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let notification of paginatedNotifications">
+              <td>{{ notification.id.substring(0, 8) }}...</td>
+              <td>{{ notification.channel }}</td>
+              <td [class]="getStatusColor(notification.status)">
+                {{ notification.status }}
+              </td>
+              <td>{{ formatDate(notification.createdAt) }}</td>
+              <td>{{ notification.processedAt ? formatDate(notification.processedAt) : '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="pagination" *ngIf="totalPages > 1">
+        <button (click)="prevPage()" [disabled]="currentPage === 1" class="page-btn">
+          Previous
+        </button>
+        <span class="page-info">
+          Page {{ currentPage }} of {{ totalPages }}
+        </span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="page-btn">
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

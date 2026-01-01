@@ -1,0 +1,19 @@
+<div class="app-container">
+  <nav class="navbar">
+    <div class="nav-brand">
+      <h2><i class="icon-bell"></i> Notification Admin</h2>
+    </div>
+    <div class="nav-links">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+        <i class="icon-dashboard"></i> Dashboard
+      </a>
+      <a routerLink="/dlq" routerLinkActive="active" class="nav-link">
+        <i class="icon-warning"></i> DLQ Viewer
+      </a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

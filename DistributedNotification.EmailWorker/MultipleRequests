@@ -1,0 +1,11 @@
+for i in {1..50}
+do
+  curl -X POST https://localhost:5001/api/notifications \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"Type\":\"OrderPlaced\",
+    \"UserId\":\"$i\",
+    \"Channel\":\"Email\",
+    \"Message\":\"Order $i placed\"
+  }" -k
+done

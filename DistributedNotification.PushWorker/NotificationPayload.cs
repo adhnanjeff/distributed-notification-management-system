@@ -1,0 +1,12 @@
+namespace DistributedNotification.PushWorker;
+
+public class NotificationPayload
+{
+    public Guid NotificationId { get; set; }
+    public string? Type { get; set; }
+    public string? Channel { get; set; }
+    public string? UserId { get; set; }
+    public string? Message { get; set; }
+    public Guid CorrelationId { get; set; } = Guid.Empty;
+    public string? TenantId { get; set; }
+}

@@ -1,0 +1,68 @@
+<div class="dlq-container">
+  <div class="header">
+    <h1>Dead Letter Queue Viewer</h1>
+    <div class="controls">
+      <select [(ngModel)]="selectedSubscription" (change)="onSubscriptionChange()" class="subscription-select">
+        <option *ngFor="let sub of subscriptions" [value]="sub">{{ sub }}</option>
+      </select>
+      <button (click)="refresh()" class="refresh-btn"><i class="icon-refresh"></i> Refresh</button>
+      <button 
+        (click)="replayMessages()" 
+        [disabled]="dlqMessages.length === 0 || replayingSubscription"
+        class="replay-btn">
+        {{ replayingSubscription ? 'Replaying...' : 'Replay All' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading DLQ messages...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="!loading && !error" class="dlq-content">
+    <div *ngIf="dlqMessages.length === 0" class="no-messages">
+      <i class="icon-check"></i> No messages in Dead Letter Queue for {{ selectedSubscription }}
+    </div>
+
+    <div *ngIf="dlqMessages.length > 0" class="messages-section">
+      <div class="messages-header">
+        <h3>Failed Messages ({{ dlqMessages.length }})</h3>
+        <p class="description">
+          These messages failed processing and were moved to the Dead Letter Queue.
+          You can replay them to retry processing.
+        </p>
+      </div>
+
+      <div class="messages-list">
+        <div *ngFor="let message of dlqMessages; let i = index" class="message-card">
+          <div class="message-header">
+            <div class="message-id">
+              <strong>Message ID:</strong> {{ message.messageId }}
+            </div>
+            <div class="delivery-count">
+              <span class="badge">Delivery Count: {{ message.deliveryCount }}</span>
+            </div>
+          </div>
+
+          <div class="message-details">
+            <div class="detail-row">
+              <div class="detail-label">Reason:</div>
+              <div class="detail-value reason">{{ message.reason || 'Unknown' }}</div>
+            </div>
+            
+            <div class="detail-row">
+              <div class="detail-label">Error:</div>
+              <div class="detail-value error">{{ message.error || 'No error description' }}</div>
+            </div>
+
+            <div class="detail-row">
+              <div class="detail-label">Message Body:</div>
+              <div class="detail-value">
+                <pre class="json-body">{{ formatJson(message.body) }}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
